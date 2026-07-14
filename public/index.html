@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PitchPilot AI - FIFA World Cup 2026 Stadium Operations & Fan Companion</title>
+  <!-- Google Fonts: Outfit for titles, Inter for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- FontAwesome Icons (for visual styling) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="fan-mode">
+
+  <!-- Main Grid Layout -->
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-futbol FIFA-pulse"></i>
+        </div>
+        <div class="logo-text">
+          <h1>PitchPilot <span class="accent-text">AI</span></h1>
+          <span class="sub-title" data-translate="stadium_hub">FIFA World Cup 2026 • MetLife Stadium Hub</span>
+        </div>
+      </div>
+      
+      <!-- Match Ticker — SF2 Preview + SF1 Result -->
+      <div class="live-ticker" style="min-width: 370px; padding: 0.35rem 1.25rem;">
+        <div class="ticker-badge" id="match-ticker-badge" style="background: #0284c7; animation: none; letter-spacing:0.04em;">UPCOMING</div>
+        <div class="ticker-content" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 0;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.85rem;">
+            <span class="team">ENG <img src="https://flagcdn.com/w20/gb-eng.png" alt="England" onerror="this.src='https://flagcdn.com/w20/gb.png'"></span>
+            <span class="score" id="live-match-score">vs</span>
+            <span class="team"><img src="https://flagcdn.com/w20/ar.png" alt="Argentina"> ARG</span>
+            <span class="match-time" id="live-match-time" style="color:#60a5fa; margin-left: 0.5rem;">KO 3:00 PM ET</span>
+          </div>
+          <div id="live-match-comment" style="font-size: 0.68rem; color: var(--text-muted); font-weight: 500;">
+            <i class="fa-solid fa-clock" style="color:#60a5fa;"></i> <span id="match-countdown">SF2 · Atlanta · Jul 15</span> &nbsp;|&nbsp; <span style="color:#22c55e;">✓ SF1: ESP 1–0 FRA</span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Right Header Actions (Mode & Lang) -->
+      <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <!-- Mode Selector -->
+        <div class="mode-toggle-container">
+          <span class="toggle-label font-title" data-translate="fan_portal"><i class="fa-solid fa-users"></i> Fan Portal</span>
+          <label class="switch">
+            <input type="checkbox" id="mode-toggle-checkbox">
+            <span class="slider round"></span>
+          </label>
+          <span class="toggle-label font-title" data-translate="staff_ops"><i class="fa-solid fa-shield-halved"></i> Staff Ops</span>
+        </div>
+
+        <!-- Global Language Selector -->
+        <div class="global-lang-container" style="display: flex; align-items: center; gap: 0.4rem; background-color: var(--bg-tertiary); border: 1px solid var(--glass-border); padding: 0.35rem 0.65rem; border-radius: var(--border-radius-sm);">
+          <i class="fa-solid fa-globe accent-text" style="font-size: 0.85rem;"></i>
+          <select id="global-lang-select" style="background: none; border: none; font-size: 0.8rem; font-weight: 600; outline: none; cursor: pointer; color: var(--text-main); width: auto; padding: 0;">
+            <option value="en" selected>English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="pt">Português</option>
+            <option value="ar">العربية</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- App Body containing Sidebar Navigation and Main Panel -->
+    <div class="app-body">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="app-sidebar">
+        <!-- Navigation Menu -->
+        <nav class="sidebar-nav">
+          <!-- Fan Menu (Shown in Fan Mode) -->
+          <div class="nav-group fan-nav-group">
+            <span class="nav-group-title" data-translate="fan_exp">FAN EXPERIENCE</span>
+            <button class="nav-item active" data-target="fan-overview">
+              <i class="fa-solid fa-chart-line"></i> <span data-translate="home_dash">Home Dashboard</span>
+            </button>
+            <button class="nav-item" data-target="fan-map">
+              <i class="fa-solid fa-map-location-dot"></i> <span data-translate="seat_path">Seat Pathfinder</span>
+            </button>
+            <button class="nav-item" data-target="fan-chat">
+              <i class="fa-solid fa-robot"></i> <span data-translate="fifa_copilot">FIFA Cup-Pilot</span>
+            </button>
+            <button class="nav-item" data-target="fan-sustainability">
+              <i class="fa-solid fa-leaf"></i> <span data-translate="green_rewards">Green Rewards</span>
+            </button>
+          </div>
+
+          <!-- Staff Menu (Shown in Staff Mode) -->
+          <div class="nav-group staff-nav-group hidden">
+            <span class="nav-group-title" data-translate="ops_command">OPERATIONS COMMAND</span>
+            <button class="nav-item" data-target="staff-overview">
+              <i class="fa-solid fa-gauge-high"></i> <span data-translate="ops_hub">Operations Hub</span>
+            </button>
+            <button class="nav-item" data-target="staff-incidents">
+              <i class="fa-solid fa-triangle-exclamation"></i> <span data-translate="incident_disp">Incident Dispatch</span>
+            </button>
+            <button class="nav-item" data-target="staff-translator">
+              <i class="fa-solid fa-language"></i> <span data-translate="trans_bridge">Translation Bridge</span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Sidebar Footer Info -->
+        <div class="sidebar-footer">
+          <div class="stadium-status">
+            <div class="status-indicator online"></div>
+            <span data-translate="stadium_online">Stadium Systems Online</span>
+          </div>
+          <div class="connection-mode">
+            <i class="fa-solid fa-brain accent-text"></i>
+            <span id="ai-engine-status">Checking Gemini AI...</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Panel -->
+      <main class="main-content">
+        
+        <!-- ============================================== -->
+        <!-- TAB 1: FAN OVERVIEW DASHBOARD -->
+        <!-- ============================================== -->
+        <section id="fan-overview" class="tab-content active animate-fade-in">
+          <div class="section-header">
+            <h2 data-translate="welcome">Welcome to MetLife Stadium</h2>
+            <p data-translate="welcome_sub">Your real-time guide for the FIFA World Cup 2026 match experience.</p>
+          </div>
+
+          <!-- Quick Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card card-glass">
+              <div class="stat-icon info"><i class="fa-solid fa-users"></i></div>
+              <div class="stat-details">
+                <h3 data-translate="capacity">Stadium Capacity</h3>
+                <p class="stat-value">82,410 / 82,500</p>
+                <span class="stat-meta" data-translate="occupied">Occupied • Near Capacity</span>
+              </div>
+            </div>
+            <div class="stat-card card-glass">
+              <div class="stat-icon warning"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="stat-details">
+                <h3 data-translate="avg_gate">Avg. Gate Wait</h3>
+                <p class="stat-value" id="avg-gate-wait-text">14 mins</p>
+                <span class="stat-meta" id="avg-gate-meta">Verizon Gate (North) has queues</span>
+              </div>
+            </div>
+            <div class="stat-card card-glass">
+              <div class="stat-icon success"><i class="fa-solid fa-leaf"></i></div>
+              <div class="stat-details">
+                <h3 data-translate="your_points">Your Green Points</h3>
+                <p class="stat-value" id="fan-green-points-val">120 pts</p>
+                <span class="stat-meta" data-translate="top_eco">Top 15% of Eco-Fans today!</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Grid for Operations Status -->
+          <div class="dashboard-details-grid">
+            
+            <!-- Gate Wait Times -->
+            <div class="content-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-door-open accent-text"></i> <span data-translate="live_wait_times">Live Entry Gate Wait Times</span></h3>
+                <span class="badge live-badge">Live</span>
+              </div>
+              <div class="card-body">
+                <div class="gate-wait-list" id="fan-gate-list">
+                  <!-- Dynamic Gates will load here -->
+                  <div class="loading-placeholder">Loading live telemetries...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Concessions & Restroom Status -->
+            <div class="content-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-burger accent-text"></i> <span data-translate="queue_forecasts">Queue Forecasts</span></h3>
+                <button class="btn btn-sm btn-outline" id="refresh-telemetry-btn"><i class="fa-solid fa-arrows-rotate"></i> <span data-translate="refresh">Refresh</span></button>
+              </div>
+              <div class="card-body">
+                <h4 data-translate="concessions_q">Concessions Queues</h4>
+                <div class="queue-list" id="fan-concessions-list">
+                  <div class="loading-placeholder">Loading concession data...</div>
+                </div>
+                <h4 style="margin-top: 1.5rem;" data-translate="restrooms_avail">Restroom Availability</h4>
+                <div class="queue-list" id="fan-restrooms-list">
+                  <div class="loading-placeholder">Loading restroom data...</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: INTERACTIVE MAP & PATHFINDER -->
+        <!-- ============================================== -->
+        <section id="fan-map" class="tab-content animate-fade-in">
+          <div class="section-header">
+            <h2 data-translate="map_title">Seat Pathfinder & Gate Navigator</h2>
+            <p data-translate="map_sub">Select your entry gate or stadium quadrant below to view wait times, accessibility facilities, and customized AI paths.</p>
+          </div>
+
+          <div class="map-grid">
+            <!-- Stadium Layout SVG Container -->
+            <div class="map-card card-glass">
+              <div class="map-visual-wrapper">
+                <!-- Interactive Vector Stadium SVG -->
+                <svg id="stadium-svg" viewBox="0 0 500 500" class="stadium-graphic">
+                  <!-- Background Outer Ring -->
+                  <circle cx="250" cy="250" r="230" class="stadium-outer-ring" />
+                  <circle cx="250" cy="250" r="190" class="stadium-middle-ring" />
+                  
+                  <!-- Stadium Quadrants / Stands -->
+                  <!-- North Stand (Verizon Gate area) -->
+                  <path id="quad-north" d="M115,115 A190,190 0 0,1 385,115 L320,180 A100,100 0 0,0 180,180 Z" class="stadium-sector active-sector" data-name="North Stand (Verizon Gate Access)" />
+                  <!-- East Stand (HCLTech Gate area) -->
+                  <path id="quad-east" d="M385,115 A190,190 0 0,1 385,385 L320,320 A100,100 0 0,0 320,180 Z" class="stadium-sector" data-name="East Stand (HCLTech Gate Access)" />
+                  <!-- South Stand (Bud Light Gate area) -->
+                  <path id="quad-south" d="M385,385 A190,190 0 0,1 115,385 L180,320 A100,100 0 0,0 320,320 Z" class="stadium-sector" data-name="South Stand (Bud Light Gate Access)" />
+                  <!-- West Stand (MetLife Gate area) -->
+                  <path id="quad-west" d="M115,385 A190,190 0 0,1 115,115 L180,180 A100,100 0 0,0 180,320 Z" class="stadium-sector" data-name="West Stand (MetLife Gate Access)" />
+
+                  <!-- Central Playing Field -->
+                  <rect x="180" y="195" width="140" height="110" rx="10" class="stadium-field" />
+                  <line x1="250" y1="195" x2="250" y2="305" class="stadium-field-line" />
+                  <circle cx="250" cy="250" r="25" class="stadium-field-circle" />
+
+                  <!-- Interactive Hotspot Pins (Gates) -->
+                  <g class="hotspot" id="pin-gate-verizon" data-gate="Verizon Gate (North)" cx="250" cy="45">
+                    <circle cx="250" cy="45" r="14" class="hotspot-pulse warning-pulse" />
+                    <circle cx="250" cy="45" r="8" class="hotspot-core warning-core" />
+                    <text x="250" y="30" class="hotspot-label">Verizon Gate (N)</text>
+                  </g>
+                  
+                  <g class="hotspot" id="pin-gate-hcltech" data-gate="HCLTech Gate (East)" cx="455" cy="250">
+                    <circle cx="455" cy="250" r="14" class="hotspot-pulse success-pulse" />
+                    <circle cx="455" cy="250" r="8" class="hotspot-core success-core" />
+                    <text x="445" y="232" class="hotspot-label text-right">HCLTech Gate (E)</text>
+                  </g>
+                  
+                  <g class="hotspot" id="pin-gate-budlight" data-gate="Bud Light Gate (South)" cx="250" cy="455">
+                    <circle cx="250" cy="455" r="14" class="hotspot-pulse moderate-pulse" />
+                    <circle cx="250" cy="455" r="8" class="hotspot-core moderate-core" />
+                    <text x="250" y="480" class="hotspot-label">Bud Light Gate (S)</text>
+                  </g>
+
+                  <g class="hotspot" id="pin-gate-metlife" data-gate="MetLife Gate (West)" cx="45" cy="250">
+                    <circle cx="45" cy="250" r="14" class="hotspot-pulse moderate-pulse" />
+                    <circle cx="45" cy="250" r="8" class="hotspot-core moderate-core" />
+                    <text x="55" y="232" class="hotspot-label text-left">MetLife Gate (W)</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="map-legend">
+                <span class="legend-item"><span class="legend-dot green"></span> Fast (< 10m)</span>
+                <span class="legend-item"><span class="legend-dot yellow"></span> Moderate (10-20m)</span>
+                <span class="legend-item"><span class="legend-dot red"></span> Heavy (> 20m)</span>
+              </div>
+            </div>
+
+            <!-- Quadrant / Gate Details & AI Pathfinder Card -->
+            <div class="details-card card-glass">
+              <div class="card-header">
+                <h3 id="map-selected-title">North Stand (Verizon Gate Access)</h3>
+              </div>
+              <div class="card-body">
+                <div class="zone-metrics-row">
+                  <div class="zone-metric">
+                    <span class="metric-label">Crowd Load</span>
+                    <span class="metric-value text-red" id="zone-crowd-load-text">High (84%)</span>
+                  </div>
+                  <div class="zone-metric">
+                    <span class="metric-label">Est. Entry Queue</span>
+                    <span class="metric-value text-red" id="zone-queue-time-text">28 mins</span>
+                  </div>
+                </div>
+
+                <div class="info-block mt-4">
+                  <h4><i class="fa-solid fa-wheelchair accent-text"></i> Accessibility Features</h4>
+                  <ul class="facility-list" id="zone-accessibility-list">
+                    <li><i class="fa-solid fa-check text-success"></i> Wheelchair ramp access via North Entrance.</li>
+                    <li><i class="fa-solid fa-check text-success"></i> ADA-compliant restrooms adjacent to Sec 103.</li>
+                    <li><i class="fa-solid fa-check text-success"></i> Sensory Room situated 200m West of the entrance portal.</li>
+                  </ul>
+                </div>
+
+                <div class="ai-pathfinder-card mt-4">
+                  <div class="ai-card-title">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>FIFA Cup-Pilot Guidance</span>
+                  </div>
+                  <div class="ai-card-content" id="zone-ai-guidance-content">
+                    "Due to severe bottlenecks at Verizon Gate (North), we recommend arriving fans walking from the Meadowlands Rail Station divert East along the outer concourse loop. Proceed to the HCLTech Gate (East) where wait times are currently under 4 minutes. Your entry ticket is valid at any main stadium gate."
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: FAN CHAT (FIFA CUP-PILOT) -->
+        <!-- ============================================== -->
+        <section id="fan-chat" class="tab-content animate-fade-in">
+          <div class="section-header">
+            <h2 data-translate="chat_title">FIFA Cup-Pilot Assistant</h2>
+            <p data-translate="chat_sub">Your GenAI companion for parking policies, transit schedules, accessibility requests, clear bag guidelines, and stadium maps.</p>
+          </div>
+
+          <div class="chat-container card-glass">
+            
+            <!-- Chat Header -->
+            <div class="chat-header-bar">
+              <div class="chat-bot-profile">
+                <div class="bot-avatar">
+                  <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                  <h4>FIFA Cup-Pilot</h4>
+                  <span class="bot-status"><span class="pulse-dot"></span> Multilingual GenAI Assistant</span>
+                </div>
+              </div>
+              <div class="chat-language-selector">
+                <i class="fa-solid fa-globe"></i>
+                <select id="chat-lang-select">
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
+                  <option value="ar">العربية</option>
+                  <option value="pt">Português</option>
+                  <option value="de">Deutsch</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="chat-messages" id="chat-messages-box">
+              <div class="message bot-message animate-slide-up">
+                <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="msg-content">
+                  <p>Welcome to MetLife Stadium! I am your FIFA Cup-Pilot assistant. How can I help you enjoy your World Cup tournament day? ⚽🏆</p>
+                  <span class="msg-time">Just now</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Quick Suggestions -->
+            <div class="chat-suggestions">
+              <button class="suggest-btn" data-query="What is the clear bag policy?">🎒 Bag Policy</button>
+              <button class="suggest-btn" data-query="How do I get to the stadium by train?">🚆 Meadowlands Rail</button>
+              <button class="suggest-btn" data-query="Where are the sensory rooms located?">♿ Sensory Rooms</button>
+              <button class="suggest-btn" data-query="How do I earn Green Points today?">🍃 Green Rewards</button>
+            </div>
+
+            <!-- Chat Input Area -->
+            <form class="chat-input-area" id="chat-form">
+              <input type="text" id="chat-input" placeholder="Ask about gates, food, transport, or accessibility policies..." required autocomplete="off">
+              <button type="submit" class="btn btn-primary" id="chat-send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 4: FAN SUSTAINABILITY / GREEN REWARDS -->
+        <!-- ============================================== -->
+        <section id="fan-sustainability" class="tab-content animate-fade-in">
+          <div class="section-header">
+            <h2 data-translate="eco_title">Green Fan Rewards Program</h2>
+            <p data-translate="eco_sub">Help make the 2026 World Cup the most sustainable tournament in history. Earn points for eco-friendly choices and unlock exclusive rewards.</p>
+          </div>
+
+          <div class="sustainability-grid">
+            
+            <!-- Sustainability Actions -->
+            <div class="sustainability-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-earth-americas accent-text"></i> Log Green Actions</h3>
+              </div>
+              <div class="card-body">
+                
+                <!-- Action 1: Transit ticket upload -->
+                <div class="eco-action-row">
+                  <div class="action-details">
+                    <h4><i class="fa-solid fa-train text-success"></i> Public Transportation</h4>
+                    <p>Log your train or bus ticket to earn points and offset travel carbon footprint.</p>
+                  </div>
+                  <button class="btn btn-outline" id="log-transit-btn">Log Ticket (+50 pts)</button>
+                </div>
+
+                <!-- Action 2: Recycling Bin Scan -->
+                <div class="eco-action-row mt-4">
+                  <div class="action-details">
+                    <h4><i class="fa-solid fa-trash-arrow-up text-success"></i> Smart Recycling Bin</h4>
+                    <p>Scan the code on our Smart Green Recycling bins when depositing plastic cups.</p>
+                  </div>
+                  <button class="btn btn-outline" id="scan-bin-btn">Scan Bin (+15 pts)</button>
+                </div>
+
+                <!-- Action 3: Eco Trivia -->
+                <div class="trivia-box mt-4 card-glass-dark">
+                  <h4><i class="fa-solid fa-brain text-gold animate-bounce"></i> Eco Trivia Challenge</h4>
+                  <p id="trivia-question">MetLife Stadium uses 100% solar power for its ring of fire lights. How many solar panels are installed on the stadium canopy?</p>
+                  <div class="trivia-options mt-2">
+                    <button class="btn btn-sm btn-option" data-correct="false">1,250</button>
+                    <button class="btn btn-sm btn-option" data-correct="true">1,350</button>
+                    <button class="btn btn-sm btn-option" data-correct="false">2,400</button>
+                  </div>
+                  <p id="trivia-feedback" class="mt-2 text-success hidden"><i class="fa-solid fa-circle-check"></i> Correct! 1,350 solar panels power our signature lights. You earned +10 Green Points!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Green Points Summary & Leaderboard -->
+            <div class="sustainability-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-trophy accent-text"></i> Eco-Fan Standings</h3>
+              </div>
+              <div class="card-body">
+                <div class="points-circle-wrapper">
+                  <div class="points-circle">
+                    <span class="points-number" id="fan-total-points-display">120</span>
+                    <span class="points-label">Total Points</span>
+                  </div>
+                </div>
+                
+                <h4 class="mt-4">Eco Leaderboard</h4>
+                <ul class="leaderboard-list">
+                  <li>
+                    <span class="rank">1</span>
+                    <span class="username">GreenWanderer2026</span>
+                    <span class="score-val text-success">380 pts</span>
+                  </li>
+                  <li>
+                    <span class="rank">2</span>
+                    <span class="username">SolarGoalie</span>
+                    <span class="score-val text-success">295 pts</span>
+                  </li>
+                  <li class="user-rank">
+                    <span class="rank">3</span>
+                    <span class="username">You (EcoFan_MetLife)</span>
+                    <span class="score-val text-success" id="fan-rank-points">120 pts</span>
+                  </li>
+                  <li>
+                    <span class="rank">4</span>
+                    <span class="username">RecycleStrikers</span>
+                    <span class="score-val text-success">110 pts</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 5: STAFF OPERATIONS HUB & HEATMAP -->
+        <!-- ============================================== -->
+        <section id="staff-overview" class="tab-content animate-fade-in">
+          <div class="section-header">
+            <h2>Stadium Operations Command</h2>
+            <p>Real-time crowd flow analysis, AI alert streams, and telemetry controls.</p>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="stats-grid">
+            <div class="stat-card card-glass border-pulse-green">
+              <div class="stat-icon success"><i class="fa-solid fa-wave-square"></i></div>
+              <div class="stat-details">
+                <h3>Flow Status</h3>
+                <p class="stat-value text-success">STABLE</p>
+                <span class="stat-meta">Active flow mitigation running</span>
+              </div>
+            </div>
+            <div class="stat-card card-glass">
+              <div class="stat-icon error"><i class="fa-solid fa-bell"></i></div>
+              <div class="stat-details">
+                <h3>Active Alerts</h3>
+                <p class="stat-value text-red" id="ops-alert-count">1 Alert</p>
+                <span class="stat-meta" id="ops-alert-meta">1 Gate Jam detected</span>
+              </div>
+            </div>
+            <div class="stat-card card-glass">
+              <div class="stat-icon warning"><i class="fa-solid fa-users-gear"></i></div>
+              <div class="stat-details">
+                <h3>Dispatched Staff</h3>
+                <p class="stat-value" id="ops-dispatched-count">12 Volunteers</p>
+                <span class="stat-meta">6 Active patrols in North Stand</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ops-grid">
+            
+            <!-- Heatmap Visualization Panel -->
+            <div class="heatmap-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-fire-flame-simple accent-text animate-pulse"></i> Live Stadium Crowd Heatmap</h3>
+                <div class="simulation-controls">
+                  <button class="btn btn-sm btn-primary" id="btn-inject-bottleneck"><i class="fa-solid fa-bolt"></i> Sim Gate Jam</button>
+                  <button class="btn btn-sm btn-outline" id="btn-reset-simulation"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="heatmap-canvas-container">
+                  <!-- Custom CSS overlay overlays on this stadium container -->
+                  <div class="stadium-graphic-overlay">
+                    <svg viewBox="0 0 500 500" class="stadium-graphic opacity-50">
+                      <circle cx="250" cy="250" r="230" class="stadium-outer-ring" />
+                      <circle cx="250" cy="250" r="190" class="stadium-middle-ring" />
+                      <path d="M115,115 A190,190 0 0,1 385,115 L320,180 A100,100 0 0,0 180,180 Z" class="stadium-sector fill-none" />
+                      <path d="M385,115 A190,190 0 0,1 385,385 L320,320 A100,100 0 0,0 320,180 Z" class="stadium-sector fill-none" />
+                      <path d="M385,385 A190,190 0 0,1 115,385 L180,320 A100,100 0 0,0 320,320 Z" class="stadium-sector fill-none" />
+                      <path d="M115,385 A190,190 0 0,1 115,115 L180,180 A100,100 0 0,0 180,320 Z" class="stadium-sector fill-none" />
+                      <rect x="180" y="195" width="140" height="110" rx="10" class="stadium-field fill-none" />
+                    </svg>
+                    
+                    <!-- Dynamic Heatmap Hotspots -->
+                    <div class="heatmap-dot dot-north" id="heat-north"></div>
+                    <div class="heatmap-dot dot-east" id="heat-east"></div>
+                    <div class="heatmap-dot dot-south" id="heat-south"></div>
+                    <div class="heatmap-dot dot-west" id="heat-west"></div>
+                    <div class="heatmap-dot dot-field" id="heat-field"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Operational Intelligence & Alerts Feed -->
+            <div class="alerts-feed-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-satellite-dish accent-text"></i> GenAI Decision Support Feed</h3>
+              </div>
+              <div class="card-body">
+                <div class="alerts-list" id="ops-alerts-list">
+                  <!-- Dynamic AI alerts will be injected here -->
+                  <div class="loading-placeholder">Evaluating sensor loops...</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 6: STAFF INCIDENT DISPATCH -->
+        <!-- ============================================== -->
+        <section id="staff-incidents" class="tab-content animate-fade-in">
+          <div class="section-header">
+            <h2>Incident Dispatch & Response Room</h2>
+            <p>Log stadium anomalies to instantly generate safety checklists and tactical deployment cards powered by Google Gemini.</p>
+          </div>
+
+          <div class="incident-grid">
+            
+            <!-- Log New Incident Form -->
+            <div class="incident-form-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-pen-to-square accent-text"></i> Report New Incident</h3>
+              </div>
+              <div class="card-body">
+                <form id="incident-form">
+                  <div class="form-group">
+                    <label for="incident-type">Incident Category</label>
+                    <select id="incident-type" required>
+                      <option value="medical">Medical Emergency</option>
+                      <option value="crowding">Gate Bottleneck / Congestion</option>
+                      <option value="spill">Slippery Floor / Spill</option>
+                      <option value="lost_child">Lost Child Protocol</option>
+                      <option value="weather">Extreme Weather Warning</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-group col-6">
+                      <label for="incident-location">Location / Section</label>
+                      <input type="text" id="incident-location" placeholder="e.g. Section 102, Gate B" required>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="incident-severity">Severity Level</label>
+                      <select id="incident-severity" required>
+                        <option value="low">Low (Maintenance)</option>
+                        <option value="medium" selected>Medium (Standard)</option>
+                        <option value="high">High (Urgent)</option>
+                        <option value="critical">Critical (Immediate Hazard)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="incident-desc">Incident Description</label>
+                    <textarea id="incident-desc" rows="3" placeholder="Provide full details: number of people involved, visible hazards, etc..." required></textarea>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI Action Plan</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Real-Time Response Checklist & Log -->
+            <div class="incident-plan-card card-glass">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-clipboard-check accent-text"></i> AI Incident Action Plan (IAP)</h3>
+                <span class="badge" id="iap-priority-badge">Pending</span>
+              </div>
+              <div class="card-body" id="iap-content-body">
+                <div class="iap-empty-state">
+                  <i class="fa-solid fa-shield-cat animate-pulse"></i>
+                  <p>No active incident selected. Log an incident on the left or select a checklist to begin mobilization.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- TAB 7: STAFF MULTILINGUAL TRANSLATOR BRIDGE -->
+        <!-- ============================================== -->
+        <section id="staff-translator" class="tab-content animate-fade-in">
+          <div class="section-header">
+            <h2>Staff Multilingual Bridge</h2>
+            <p>Bypass language barriers between tournament staff and international fans. Translate queries and review cultural hints.</p>
+          </div>
+
+          <div class="translator-container card-glass">
+            
+            <!-- Lang Selectors Row -->
+            <div class="translation-controls-row">
+              <div class="lang-selector-box">
+                <label>Fan Language</label>
+                <select id="trans-lang-from">
+                  <option value="es" selected>Español (Spanish)</option>
+                  <option value="fr">Français (French)</option>
+                  <option value="ar">العربية (Arabic)</option>
+                  <option value="ja">日本語 (Japanese)</option>
+                  <option value="pt">Português (Portuguese)</option>
+                </select>
+              </div>
+              
+              <div class="swap-icon">
+                <i class="fa-solid fa-right-left"></i>
+              </div>
+
+              <div class="lang-selector-box">
+                <label>Staff Language</label>
+                <select id="trans-lang-to">
+                  <option value="en" selected>English</option>
+                  <option value="es">Español</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Translate Text Areas -->
+            <div class="translation-areas-grid">
+              
+              <!-- Fan Input -->
+              <div class="trans-text-box">
+                <div class="box-header">
+                  <span>Fan Input (Speech/Text)</span>
+                  <button class="btn-icon" id="btn-speak-fan" title="Mock voice input"><i class="fa-solid fa-microphone"></i></button>
+                </div>
+                <textarea id="trans-input-text" rows="5" placeholder="Type fan query here... Or click Mic for quick preset options."></textarea>
+              </div>
+
+              <!-- Staff Translation -->
+              <div class="trans-text-box output-box">
+                <div class="box-header">
+                  <span>Translated Output (AI Powered)</span>
+                </div>
+                <div class="output-wrapper">
+                  <div class="translated-output" id="trans-output-text">
+                    Translation will show up here.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Action Button -->
+            <div class="translate-action-row">
+              <button class="btn btn-primary" id="btn-translate-run"><i class="fa-solid fa-language"></i> Translate Query</button>
+            </div>
+
+            <!-- Communication Guide Tips card -->
+            <div class="culture-guide-card mt-4" id="translation-guide-container">
+              <div class="guide-title">
+                <i class="fa-solid fa-comments-question text-gold"></i>
+                <span>GenAI Interaction Guide</span>
+              </div>
+              <div class="guide-content" id="trans-cultural-tip">
+                "Select languages and enter text. The AI will output translations along with helpful guidelines on phrasing security directions, ticketing policies, or welcoming gestures appropriately for their culture."
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- Audio elements simulated visually -->
+  <div id="visual-audio-beeps" class="hidden"></div>
+  
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
