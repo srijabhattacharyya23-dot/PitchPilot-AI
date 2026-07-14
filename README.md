@@ -426,9 +426,9 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 👩‍💻 Author
-
-**Srija Bhattacharya** · [srija.bhattacharyya23@gmail.com](mailto:srija.bhattacharyya23@gmail.com)
+<p align="center">
+Made with ❤️ by <b>Srija Bhattacharya</b>
+</p>
 
 Built for: **FIFA World Cup 2026 GenAI Challenge**
 Powered by: Google Gemini 2.0 Flash
