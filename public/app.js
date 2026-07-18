@@ -1188,7 +1188,7 @@ function showToastNotification(title, message) {
   }, 4000);
 }
 
-// --- Match Ticker: Countdown + Live Simulation (ENG vs ARG, SF2, Jul 15 2026, 3PM ET) ---
+// --- Match Ticker: Countdown + Live Simulation (ESP vs ARG, Final, Jul 19 2026, 3PM ET) ---
 function initMatchSimulation() {
   const scoreEl   = document.getElementById('live-match-score');
   const timeEl    = document.getElementById('live-match-time');
@@ -1196,50 +1196,50 @@ function initMatchSimulation() {
   const badgeEl   = document.getElementById('match-ticker-badge');
   const countdownEl = document.getElementById('match-countdown');
 
-  // Kickoff: July 15 2026, 3:00 PM Eastern Time (UTC-4 in summer = 19:00 UTC)
-  const kickoffUTC = new Date('2026-07-15T19:00:00Z');
+  // Kickoff: July 19 2026, 3:00 PM Eastern Time (UTC-4 in summer = 19:00 UTC)
+  const kickoffUTC = new Date('2026-07-19T19:00:00Z');
 
   // Pre-match rotating teasers
   const preTeasers = [
-    "SF2 · Atlanta · Jul 15 · KO 3 PM ET",
-    "✓ SF1 Result: Spain 1–0 France (Oyarzabal 38')",
-    "Final at MetLife Stadium · Jul 19 · vs Spain",
+    "Final · MetLife Stadium · Jul 19 · KO 3 PM ET",
+    "✓ 3rd Place: England 6–4 France",
+    "Spain looking for their 2nd World Cup title",
     "Argentina are 2-time defending champions",
-    "England last WC Final: 1966 · Can they go all the way?",
-    "Winner faces Spain in the World Cup Final · Jul 19",
+    "Can Messi lift the trophy once again?",
+    "World Cup Final · Spain vs Argentina",
   ];
   let teaserIdx = 0;
 
   // Live commentary once match starts
   const commentary = {
-    1:  "KICKOFF! England vs Argentina — World Cup Semi-Final 2 is UNDERWAY!",
+    1:  "KICKOFF! Spain vs Argentina — The World Cup Final is UNDERWAY!",
     5:  "Early possession battle. Argentina controlling in midfield.",
-    10: "England's first chance — Bellingham drives forward but blocked.",
-    15: "Argentina building pressure. Lautaro Martínez testing the England defence.",
-    20: "YELLOW CARD: Romero booked for a late challenge on Palmer.",
-    25: "England on the attack. Saka whips a cross — headed clear.",
-    30: "Argentina corner — cleared by Stones. England counter quickly.",
-    35: "SHOT! Mac Allister from 25 yards — straight at Pickford!",
+    10: "Spain's first chance — Yamal drives forward but blocked.",
+    15: "Argentina building pressure. Lautaro Martínez testing the Spanish defence.",
+    20: "YELLOW CARD: Romero booked for a late challenge on Morata.",
+    25: "Spain on the attack. Williams whips a cross — headed clear.",
+    30: "Argentina corner — cleared by Laporte. Spain counter quickly.",
+    35: "SHOT! Mac Allister from 25 yards — straight at Simón!",
     40: "40' — End-to-end action. Both managers animated on the touchline.",
-    45: "45' +3' — HALF TIME: England 0–0 Argentina. Tight first half.",
-    50: "SECOND HALF UNDERWAY. England pushing forward from the start.",
-    55: "⚽ GOAL! ARGENTINA! Lautaro Martínez taps in from a De Paul cross. ARG 1–0 ENG!",
-    60: "England respond — Rashford and Palmer brought on by Southgate.",
-    65: "⚽ GOAL! ENGLAND! Saka drives low into the corner! ENG 1–1 ARG!",
+    45: "45' +3' — HALF TIME: Spain 0–0 Argentina. Tight first half.",
+    50: "SECOND HALF UNDERWAY. Spain pushing forward from the start.",
+    55: "⚽ GOAL! ARGENTINA! Lautaro Martínez taps in from a De Paul cross. ESP 0–1 ARG!",
+    60: "Spain respond — Pedri and Olmo brought on.",
+    65: "⚽ GOAL! SPAIN! Yamal drives low into the corner! ESP 1–1 ARG!",
     70: "MetLife erupts! Level game — 20 minutes left in regulation!",
-    75: "Argentina countering dangerously. Álvarez skips past Walker — shot wide!",
-    78: "⚽⚽ GOAL! Mac Allister thunderbolt from 30 yards! ARG 2–1 ENG!",
-    82: "VAR CHECK: England penalty appeal — NO PENALTY given.",
-    85: "85' — England throwing everything forward. 5 mins to save their World Cup!",
-    88: "⚽⚽⚽ GOAL! RASHFORD! Header from a Trippier cross! ENG 2–2 ARG!",
+    75: "Argentina countering dangerously. Álvarez skips past Cucurella — shot wide!",
+    78: "⚽⚽ GOAL! Mac Allister thunderbolt from 30 yards! ESP 1–2 ARG!",
+    82: "VAR CHECK: Spain penalty appeal — NO PENALTY given.",
+    85: "85' — Spain throwing everything forward. 5 mins to save their World Cup!",
+    88: "⚽⚽⚽ GOAL! MORATA! Header from a Carvajal cross! ESP 2–2 ARG!",
     90: "90' — FIVE MINUTES STOPPAGE TIME signalled by fourth official!",
-    92: "90+2': Stones hits the bar for England! AGONISING!",
-    95: "FULL TIME (90') — England 2–2 Argentina — EXTRA TIME!"
+    92: "90+2': Rodri hits the bar for Spain! AGONISING!",
+    95: "FULL TIME (90') — Spain 2–2 Argentina — EXTRA TIME!"
   };
 
   let matchStarted = false;
   let simMinute = 0;
-  let scoreENG = 0;
+  let scoreESP = 0;
   let scoreARG = 0;
   let stoppageTime = 0;
   let matchEnded = false;
@@ -1295,12 +1295,12 @@ function initMatchSimulation() {
 
     // Score triggers
     if (simMinute === 55) { scoreARG = 1; }
-    if (simMinute === 65) { scoreENG = 1; }
+    if (simMinute === 65) { scoreESP = 1; }
     if (simMinute === 78) { scoreARG = 2; }
-    if (simMinute === 88) { scoreENG = 2; }
+    if (simMinute === 88) { scoreESP = 2; }
 
     // Update score
-    if (scoreEl) scoreEl.textContent = `${scoreENG} - ${scoreARG}`;
+    if (scoreEl) scoreEl.textContent = `${scoreESP} - ${scoreARG}`;
 
     // Update clock
     if (timeEl) {
@@ -1319,7 +1319,7 @@ function initMatchSimulation() {
     if (commentEl) {
       const key = simMinute < 90 ? simMinute : (90 + stoppageTime);
       const roundedKey = Object.keys(commentary).map(Number).filter(k => k <= key).pop();
-      const text = commentary[roundedKey] || 'England and Argentina locked in a fierce World Cup battle.';
+      const text = commentary[roundedKey] || 'Spain and Argentina locked in a fierce World Cup battle.';
       const isGoal = text.includes('⚽') || text.includes('GOAL');
       const isVAR  = text.includes('VAR') || text.includes('PENALTY');
       const icon = isGoal ? '<i class="fa-solid fa-circle-exclamation" style="color:#f59e0b;"></i>'
