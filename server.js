@@ -168,7 +168,7 @@ const MOCK_TRANSLATIONS = {
 
 // 1. Fan chatbot endpoint
 app.post('/api/chat', async (req, res) => {
-  const { message, history } = req.body;
+  const { message, history, targetLanguage } = req.body;
   
   if (!message) {
     return res.status(400).json({ error: 'Message is required' });
@@ -191,7 +191,7 @@ app.post('/api/chat', async (req, res) => {
         - Clear bag policy: Max size 12"x6"x12" clear plastic, or small clutch 4.5"x6.5".
         - Concessions are cash-free. Water bottle (plastic, unopened, <20oz) is allowed.
         - Sustainability: Recycle to earn "Green Points" redeemable for stadium merchandise discounts.
-        Respond in the language of the fan's message (e.g. English, Spanish, French, Portuguese, Arabic, etc.).`
+        IMPORTANT: You MUST respond strictly in the language corresponding to this language code: "${targetLanguage || 'en'}".`
       });
 
       // Prepare history in Gemini format
