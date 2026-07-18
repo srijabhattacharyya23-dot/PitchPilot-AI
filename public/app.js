@@ -1377,7 +1377,10 @@ function initLanguageSelector() {
     if (chatLangSelect) {
       // Only sync if the lang exists as an option
       const chatOptions = Array.from(chatLangSelect.options).map(o => o.value);
-      if (chatOptions.includes(lang)) chatLangSelect.value = lang;
+      if (chatOptions.includes(lang)) {
+        chatLangSelect.value = lang;
+        state.selectedLanguage = lang;
+      }
     }
 
     // Sync the translator "from" selector
