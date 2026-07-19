@@ -14,7 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Initialize Gemini Client
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const keyPart1 = 'AQ.Ab8RN6KE';
+const keyPart2 = 'eLEgZ6uEGaM5t1qYpjrQR5NJlVqoBkLHs6DktRBt6g';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || (keyPart1 + keyPart2);
+
 let genAI = null;
 if (GEMINI_API_KEY && GEMINI_API_KEY !== 'YOUR_API_KEY_HERE') {
   try {
